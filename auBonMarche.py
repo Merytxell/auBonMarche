@@ -14,6 +14,12 @@ class Vegetable:
     def __repr__(self):
         return self.__str__()
 
+    def update_quantity(self,quantity):
+        if quantity > self.quantity:
+            return False
+        self.quantity -= quantity
+        return True
+
 
 #créer une liste de fruits et légumes
 vegetables_list =[
@@ -39,16 +45,33 @@ vegetables_list =[
     Vegetable("Salsifis",2.5,3,"kg")
 ]
 
+#class client , ajout panier, paiement
 class Client:
     def __init__(self,name):
         self.name=name
+        self.cart=[]
+        self.total_price=0
+
+    def add_to_cart(self,vegetal,quantity):
+        if vegetable.update_quantity():
+            self.cart.append((vegetable,quantity))
+            self.total_price += vegetal.price * quantity
+            print(f"{quantity}{vegetable.name} ajouté dans le panier")
+        else:
+            print(f"pas de stock de {vegetable.name}")
+
+    def show_cart(self):
+        print(f"{self.name}, voici votre panier")
+        for vegetable, quantity in self.cart:
+            print(f"{vegetable.name}: {quantity} {vegetable.unit} - {vegetable.price}€")
+        print(f"Votre panier revient à : {self.total_price}€")
+
 
 #créer un menu où l'utilisateur pourra choisir ses achats
 def display_vegetables(vegetables_list):
     print("Voici les fruits et légumes disponibles :")
     for index, vegetable in enumerate(vegetables_list,1):
         print(f"{index}. {vegetable}")
-
 
 
 def get_user_choice():
@@ -78,15 +101,34 @@ def get_user_choice():
     return arguments
 
 
-display_vegetables(vegetables_list)
-chosen_vegetable_index=get_user_choice()
+#ajout client et choix quantité
+def achat():
 
-#demander à l'utilisateur quelle quantité il prend
-#enregistrer client
-#mettre le prix à jour en fonction de la commande
+    display_vegetables(vegetables_list)
+    chosen_vegetable_index=get_user_choice()
+
+    # enregistrer client
+    client_name=input("Entrez votre nom")
+    client=Client(client_name)
+
+    for choice in chosen_vegetable_index:
+        vegetable = vegetables_list[choice - 1]
+        print(f"\nVous avez choisi : {vegetable}")
+        quantity = int(input(f"Combien de {vegetable.name} voulez-vous acheter ? "))
+        client.add_to_cart(vegetable, quantity)
+
+    client.show_cart()
+
 #mettre à jour le stock pour chaque produit
+print("Stock restant")
+for vegetable in vegetables_list:
+    print(vegetable)
 
 
+if __name__ == "__main__":
+    achat()
+
+#mettre le prix à jour en fonction de la commande
 #afficher la liste des clients avec total achat
 #stock total de chaque légumes
 
