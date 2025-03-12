@@ -47,15 +47,15 @@ vegetables_list =[
 
 #class client , ajout panier, paiement
 class Client:
-    def __init__(self,name):
+    def __init__(self,name,surname):
         self.name=name
         self.cart=[]
         self.total_price=0
 
-    def add_to_cart(self,vegetal,quantity):
-        if vegetable.update_quantity():
+    def add_to_cart(self,vegetable,quantity):
+        if vegetable.update_quantity(quantity):
             self.cart.append((vegetable,quantity))
-            self.total_price += vegetal.price * quantity
+            self.total_price += vegetable.price * quantity
             print(f"{quantity}{vegetable.name} ajouté dans le panier")
         else:
             print(f"pas de stock de {vegetable.name}")
@@ -64,6 +64,7 @@ class Client:
         print(f"{self.name}, voici votre panier")
         for vegetable, quantity in self.cart:
             print(f"{vegetable.name}: {quantity} {vegetable.unit} - {vegetable.price}€")
+            # mettre le prix à jour en fonction de la commande
         print(f"Votre panier revient à : {self.total_price}€")
 
 
@@ -92,11 +93,6 @@ def get_user_choice():
                     break
             except ValueError:
                 print("Veuillez entrer des numéros valides.")
-
-    # Afficher les articles choisis
-    print("\nVous avez choisi :")
-    for choice in arguments:
-        print(f"- {vegetables_list[choice - 1]}")
 
     return arguments
 
@@ -128,7 +124,7 @@ for vegetable in vegetables_list:
 if __name__ == "__main__":
     achat()
 
-#mettre le prix à jour en fonction de la commande
-#afficher la liste des clients avec total achat
+
+#afficher le bilan avec la liste des clients avec total achat
 #stock total de chaque légumes
 
