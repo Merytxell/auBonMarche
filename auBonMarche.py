@@ -1,12 +1,15 @@
 import sys
 
+client_list : list["Client"]=[]
+stock_list: list["Vegetable"]=[]
+
 #definir une classe fruit/legumes
 class Vegetable:
-    def __init__ (self,name,price,quantity, unit="kg"):
-        self.name= name
-        self.price=price
-        self.quantity=quantity
-        self.unit=unit
+    def __init__ (self,name : str,price : float,quantity : int, unit :str ="kg" )-> None :
+        self.name : str= name
+        self.price : float =price
+        self.quantity : int=quantity
+        self.unit : str=unit
 
     def __str__(self):
         return f"{self.name}-{self.price}€,{self.quantity} {self.unit}"
@@ -47,12 +50,12 @@ vegetables_list =[
 
 #class client , ajout panier, paiement
 class Client:
-    def __init__(self,name,surname):
-        self.name=name
-        self.cart=[]
-        self.total_price=0
+    def __init__(self,name: str) -> None:
+        self.name :str=name
+        self.cart: list=[tuple[Vegetable, int]]
+        self.total_price : float=0.0
 
-    def add_to_cart(self,vegetable,quantity):
+    def add_to_cart(self,vegetable:Vegetable,quantity:int):
         if vegetable.update_quantity(quantity):
             self.cart.append((vegetable,quantity))
             self.total_price += vegetable.price * quantity
@@ -68,8 +71,9 @@ class Client:
         print(f"Votre panier revient à : {self.total_price}€")
 
 
-#créer un menu où l'utilisateur pourra choisir ses achats
-def display_vegetables(vegetables_list):
+
+#choisir les produits en fonction de l'index
+def display_vegetables() :
     print("Voici les fruits et légumes disponibles :")
     for index, vegetable in enumerate(vegetables_list,1):
         print(f"{index}. {vegetable}")
@@ -98,15 +102,15 @@ def get_user_choice():
 
 
 #ajout client et choix quantité
-def achat():
+def achat() -> None:
 
-    display_vegetables(vegetables_list)
+    display_vegetables()
     chosen_vegetable_index=get_user_choice()
 
     # enregistrer client
     client_name=input("Entrez votre nom")
     client=Client(client_name)
-
+    client_list.append(client)
     for choice in chosen_vegetable_index:
         vegetable = vegetables_list[choice - 1]
         print(f"\nVous avez choisi : {vegetable}")
@@ -115,16 +119,53 @@ def achat():
 
     client.show_cart()
 
+
 #mettre à jour le stock pour chaque produit
 print("Stock restant")
 for vegetable in vegetables_list:
     print(vegetable)
 
+#afficher les clients et les commandes
+def display_client() -> None:
+    if not client_list:
+        print("aucun client enregistré")
+        return
+    print("Liste des clients et leurs commandes :")
+    for client in client_list:
+        for client in client_list:
+            print(f"client : {client.name}")
+            for vegetable, quantity in client.cart:
+                print(f"{quantity} {vegetable.unit} de {vegetable.name} ({vegetable.price}€ ")
+            print(f"total dépensé : {client.total_price}€")
 
+def display_stock():
+    print("\nStock actuel des fruits et légumes :")
+    for vegetable in vegetables_list:
+        print(vegetable)
+
+
+#afficher le menu :
 if __name__ == "__main__":
-    achat()
+    while True:
+        print("Menu")
+        print("1. faire des achats")
+        print("2. Voir la liste des clients et leurs commandes")
+        print("3. Voir le stock")
+        print("4. Quitter")
+
+        select = input("sélectionnez une option :")
+        if select == "1":
+            achat()
+        if select == "2":
+            display_client()
+        elif select =="3":
+            display_stock()
+        elif select =="4":
+            print("au revoir !")
+        else:
+            print("choix invalide")
 
 
-#afficher le bilan avec la liste des clients avec total achat
+
 #stock total de chaque légumes
 
