@@ -1,15 +1,20 @@
 import sys
+from abc import ABC, abstractmethod
 
 client_list : list["Client"]=[]
 stock_list: list["Produce"]=[]
 
 #definir une classe fruit/legumes
-class Produce:
+class Produce(ABC):
     def __init__ (self,name : str,price : float,quantity : int, unit :str ="kg" )-> None :
         self.name : str= name
         self.price : float =price
         self.quantity : int=quantity
         self.unit : str=unit
+
+    @abstractmethod
+    def get_category(self):
+        pass
 
     def __str__(self):
         return f"{self.name}-{self.price}€,{self.quantity} {self.unit}"
@@ -26,10 +31,14 @@ class Produce:
 
 # Classes enfants
 class Fruit(Produce):
-    pass
+    def get_category(self):
+        return "Fruit"
 
 class Vegetable (Produce):
-    pass
+    def get_category(self):
+        return "Légume"
+
+
 
 #créer une liste de fruits et légumes
 stock_list =[
@@ -62,13 +71,13 @@ class Client:
         self.cart: list=[]
         self.total_price : float=0.0
 
-    def add_to_cart(self,vegetable:Vegetable,quantity:int):
-        if vegetable.update_quantity(quantity):
-            self.cart.append((vegetable,quantity))
-            self.total_price += vegetable.price * quantity
-            print(f"{quantity}{vegetable.name} ajouté dans le panier")
+    def add_to_cart(self,produce:Produce, quantity:int):
+        if produce.update_quantity(quantity):
+            self.cart.append((produce,quantity))
+            self.total_price += produce.price * quantity
+            print(f"{quantity}{produce.name} ajouté dans le panier")
         else:
-            print(f"pas de stock de {vegetable.name}")
+            print(f"pas de stock de {produce.name}")
 
     def show_cart(self):
         print(f"{self.name}, voici votre panier")
@@ -141,14 +150,14 @@ def display_client() -> None:
     for client in client_list:
         for client in client_list:
             print(f"client : {client.name}")
-            for vegetable, quantity in client.cart:
-                print(f"{quantity} {vegetable.unit} de {vegetable.name} ({vegetable.price}€ ")
+            for produce, quantity in client.cart:
+                print(f"{quantity} {produce.unit} de {produce.name} ({produce.price}€ ")
             print(f"total dépensé : {client.total_price}€")
 
 def display_stock():
     print("\nStock actuel des fruits et légumes :")
-    for vegetable in stock_list:
-        print(vegetable)
+    for produce  in stock_list:
+        print(produce)
 
 
 #afficher le menu :
