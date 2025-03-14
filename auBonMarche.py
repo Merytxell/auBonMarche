@@ -1,10 +1,10 @@
 import sys
 
 client_list : list["Client"]=[]
-stock_list: list["Vegetable"]=[]
+stock_list: list["Produce"]=[]
 
 #definir une classe fruit/legumes
-class Vegetable:
+class Produce:
     def __init__ (self,name : str,price : float,quantity : int, unit :str ="kg" )-> None :
         self.name : str= name
         self.price : float =price
@@ -24,18 +24,25 @@ class Vegetable:
         return True
 
 
+# Classes enfants
+class Fruit(Produce):
+    pass
+
+class Vegetable (Produce):
+    pass
+
 #créer une liste de fruits et légumes
-vegetables_list =[
-    Vegetable("Clémentine",2.90, 6,"kg"),
-    Vegetable("Datte", 3.50,4,"kg"),
-    Vegetable("Grenade",3.50,3,"kg"),
-    Vegetable("Kaki",4.50,3,"kg"),
-    Vegetable("Kiwi",3.50,5,"kg"),
-    Vegetable("Mandarine",2.80,6,"kg"),
-    Vegetable("Orange",1.50,8,"kg"),
-    Vegetable("Pamplemousse",2,8,"pc"),
-    Vegetable("Poire", 2.50, 5,"kg"),
-    Vegetable("Pomme", 1.50,8,"kg"),
+stock_list =[
+    Fruit("Clémentine",2.90, 6,"kg"),
+    Fruit("Datte", 3.50,4,"kg"),
+    Fruit("Grenade",3.50,3,"kg"),
+    Fruit("Kaki",4.50,3,"kg"),
+    Fruit("Kiwi",3.50,5,"kg"),
+    Fruit("Mandarine",2.80,6,"kg"),
+    Fruit("Orange",1.50,8,"kg"),
+    Fruit("Pamplemousse",2,8,"pc"),
+    Fruit("Poire", 2.50, 5,"kg"),
+    Fruit("Pomme", 1.50,8,"kg"),
     Vegetable("Carotte",1.30,7,"kg"),
     Vegetable("Choux de Bruxelles", 4, 4,"kg"),
     Vegetable("Chou vert",2.5,12,"pc"),
@@ -52,7 +59,7 @@ vegetables_list =[
 class Client:
     def __init__(self,name: str) -> None:
         self.name :str=name
-        self.cart: list=[tuple[Vegetable, int]]
+        self.cart: list=[]
         self.total_price : float=0.0
 
     def add_to_cart(self,vegetable:Vegetable,quantity:int):
@@ -65,18 +72,18 @@ class Client:
 
     def show_cart(self):
         print(f"{self.name}, voici votre panier")
-        for vegetable, quantity in self.cart:
-            print(f"{vegetable.name}: {quantity} {vegetable.unit} - {vegetable.price}€")
+        for produce, quantity in self.cart:
+            print(f"{produce.name}: {quantity} {produce.unit} - {produce.price}€")
             # mettre le prix à jour en fonction de la commande
         print(f"Votre panier revient à : {self.total_price}€")
 
 
 
 #choisir les produits en fonction de l'index
-def display_vegetables() :
+def display_produce() :
     print("Voici les fruits et légumes disponibles :")
-    for index, vegetable in enumerate(vegetables_list,1):
-        print(f"{index}. {vegetable}")
+    for index, produce in enumerate(stock_list,1):
+        print(f"{index}. {produce}")
 
 
 def get_user_choice():
@@ -91,7 +98,7 @@ def get_user_choice():
                 choice_input = input("Servez-vous (saisir des numéros séparés par des espaces) : ")
                 choice_list = choice_input.split()  # Séparer les numéros par des espaces
                 arguments = [int(choice) for choice in choice_list]  # Convertir en int
-                if any(choice < 1 or choice > len(vegetables_list) for choice in arguments):
+                if any(choice < 1 or choice > len(stock_list) for choice in arguments):
                     print("Choix invalide. Veuillez entrer des numéros valides.")
                 else:
                     break
@@ -104,7 +111,7 @@ def get_user_choice():
 #ajout client et choix quantité
 def achat() -> None:
 
-    display_vegetables()
+    display_produce()
     chosen_vegetable_index=get_user_choice()
 
     # enregistrer client
@@ -112,18 +119,18 @@ def achat() -> None:
     client=Client(client_name)
     client_list.append(client)
     for choice in chosen_vegetable_index:
-        vegetable = vegetables_list[choice - 1]
-        print(f"\nVous avez choisi : {vegetable}")
-        quantity = int(input(f"Combien de {vegetable.name} voulez-vous acheter ? "))
-        client.add_to_cart(vegetable, quantity)
+        produce = stock_list[choice - 1]
+        print(f"\nVous avez choisi : {produce}")
+        quantity = int(input(f"Combien de {produce.name} voulez-vous acheter ? "))
+        client.add_to_cart(produce, quantity)
 
     client.show_cart()
 
 
 #mettre à jour le stock pour chaque produit
 print("Stock restant")
-for vegetable in vegetables_list:
-    print(vegetable)
+for produce in stock_list:
+    print(produce)
 
 #afficher les clients et les commandes
 def display_client() -> None:
@@ -140,7 +147,7 @@ def display_client() -> None:
 
 def display_stock():
     print("\nStock actuel des fruits et légumes :")
-    for vegetable in vegetables_list:
+    for vegetable in stock_list:
         print(vegetable)
 
 
